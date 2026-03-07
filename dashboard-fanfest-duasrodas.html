@@ -188,15 +188,28 @@
     .kpi-card:nth-child(4) { animation-delay: 0.20s; }
 
     /* ── RESPONSIVE ── */
+    .title-short, .subtitle-short { display: none; }
+
     @media (max-width: 1100px) { .kpi-hero { grid-template-columns: repeat(2,1fr); } .meta-grid { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 768px)  {
-      .main { padding: 16px 16px 40px; } .header { padding: 14px 16px; flex-wrap: wrap; }
+      .main { padding: 16px 16px 40px; }
+      .header { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
       .kpi-hero { grid-template-columns: 1fr 1fr; } .meta-grid { grid-template-columns: repeat(2,1fr); }
       .grid-2 { grid-template-columns: 1fr; } .filter-bar { gap: 10px; }
       .funnel { flex-direction: column; gap: 4px; }
       .funnel-step { border-radius: var(--radius-sm) !important; }
       .funnel-arrow { transform: rotate(90deg); justify-content: center; }
       footer { flex-direction: column; gap: 6px; text-align: center; }
+      /* Header compacto mobile */
+      .title-full, .subtitle-full { display: none; }
+      .title-short, .subtitle-short { display: inline; }
+      .header-title { font-size: 1rem; }
+      .header-subtitle { font-size: 0.65rem; }
+      .lime-logo svg { height: 28px; }
+      .header-sep, .header-client { font-size: 0.8rem; }
+      .header-right { gap: 3px; }
+      .period-badge { font-size: 0.7rem; padding: 3px 10px; }
+      .gen-date { font-size: 0.6rem; }
     }
   </style>
 </head>
@@ -215,8 +228,8 @@
     <span class="header-client">Duas Rodas</span>
   </div>
   <div class="header-center">
-    <h1 class="header-title">FanFest MotoGP — Dashboard de Performance</h1>
-    <p class="header-subtitle">Meta Ads · Balada App · Análise completa de resultados</p>
+    <h1 class="header-title"><span class="title-full">FanFest MotoGP — Dashboard de Performance</span><span class="title-short">FanFest MotoGP</span></h1>
+    <p class="header-subtitle"><span class="subtitle-full">Meta Ads · Balada App · Análise completa de resultados</span><span class="subtitle-short">Meta Ads · Balada App</span></p>
   </div>
   <div class="header-right">
     <span class="period-badge" id="periodBadge">10 FEV – 05 MAR 2026</span>
