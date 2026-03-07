@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FanFest MotoGP — Dashboard Lime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --lime: #C8FF00;
+      --lime-dim: rgba(200,255,0,0.08);
+      --lime-border: rgba(200,255,0,0.25);
+      --purple: #7B2D8B;
+      --bg: #0A0A0A;
+      --bg-card: #141414;
+      --bg-card-hover: #1C1C1C;
+      --text: #FFFFFF;
+      --text-secondary: #D0D0D0;   /* ← mais branco */
+      --text-muted: #909090;       /* ← mais legível */
+      --positive: #00FF88;
+      --negative: #FF4444;
+      --border: rgba(255,255,255,0.08);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #0D0D0D 0%, #141414 100%);
+      border-bottom: 1px solid var(--lime-border);
+      padding: 18px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100; gap: 16px;
+    }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .lime-logo { display: flex; align-items: center; }
+    .lime-logo svg { height: 38px; width: auto; }
+    .header-sep { color: #444; font-size: 1.3rem; }
+    .header-client { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: #BBBBBB; letter-spacing: 0.06em; text-transform: uppercase; }
+    .header-center { text-align: center; flex: 1; }
+    .header-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .header-subtitle { font-size: 0.72rem; color: #888; letter-spacing: 0.05em; margin-top: 2px; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .period-badge { background: var(--lime-dim); border: 1px solid var(--lime-border); border-radius: 20px; color: var(--lime); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.78rem; padding: 4px 14px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .gen-date { font-size: 0.68rem; color: #888; }
+
+    /* ── MAIN ── */
+    .main { max-width: 1440px; margin: 0 auto; padding: 28px 40px 60px; }
+
+    /* ── SECTION TITLE ── */
+    .section-header { margin-bottom: 16px; }
+    .section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lime); display: flex; align-items: center; gap: 7px; }
+    .section-title::before { content: '✱'; }
+    .section-desc { font-size: 0.75rem; color: #909090; margin-top: 3px; }
+
+    /* ── DATE FILTER ── */
+    .filter-bar {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .filter-label-main { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+    .filter-shortcuts { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-filter {
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 20px; color: #AAAAAA;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 5px 14px; cursor: pointer; transition: all 0.18s;
+    }
+    .btn-filter:hover { border-color: var(--lime-border); color: var(--lime); }
+    .btn-filter.active { background: var(--lime-dim); border-color: var(--lime-border); color: var(--lime); }
+    .filter-sep { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+    .filter-custom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-lbl { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.06em; }
+    .date-input {
+      background: #1A1A1A; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: #DDD;
+      font-family: 'Inter', sans-serif; font-size: 0.78rem;
+      padding: 5px 10px; cursor: pointer; color-scheme: dark;
+      transition: border-color 0.18s;
+    }
+    .date-input:focus { outline: none; border-color: var(--lime-border); }
+    .btn-apply {
+      background: var(--lime); border: none; border-radius: 20px;
+      color: #000; font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 0.75rem; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 5px 16px;
+      cursor: pointer; transition: opacity 0.18s;
+    }
+    .btn-apply:hover { opacity: 0.82; }
+
+    /* ── INSIGHT BOX ── */
+    .insight-box { background: var(--lime-dim); border: 1px solid var(--lime-border); border-radius: var(--radius); padding: 14px 20px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 20px; }
+    .insight-icon { color: var(--lime); font-size: 1.1rem; flex-shrink: 0; padding-top: 1px; }
+    .insight-text { font-size: 0.82rem; color: #D0D0D0; line-height: 1.6; }
+    .insight-text strong { color: var(--lime); }
+    .insight-text .purple { color: #CC88FF; }
+
+    /* ── HERO KPIS ── */
+    .kpi-hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    .kpi-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s; }
+    .kpi-card:hover { border-color: var(--lime-border); background: var(--bg-card-hover); }
+    .kpi-card.lime   { border-left: 3px solid var(--lime); }
+    .kpi-card.purple { border-left: 3px solid var(--purple); }
+    .kpi-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.72rem; color: #999; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 9px; }
+    .kpi-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 2.4rem; color: var(--text); line-height: 1; }
+    .kpi-value.lime-color { color: var(--lime); }
+    .kpi-sub { font-size: 0.72rem; color: #888; margin-top: 7px; }
+    .kpi-watermark { position: absolute; right: 14px; bottom: 8px; font-size: 2.8rem; color: rgba(255,255,255,0.025); user-select: none; pointer-events: none; }
+
+    /* ── META SMALL CARDS ── */
+    .meta-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 32px; }
+    .meta-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; text-align: center; transition: border-color 0.2s; }
+    .meta-card:hover { border-color: var(--lime-border); }
+    .meta-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.68rem; color: #999; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 7px; }
+    .meta-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.45rem; color: var(--text); }
+
+    /* ── CHART CARDS ── */
+    .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 20px; }
+    .chart-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text); margin-bottom: 3px; }
+    .chart-sub { font-size: 0.72rem; color: #909090; margin-bottom: 18px; }
+    .chart-wrapper { position: relative; }
+
+    /* ── PHASE LEGEND ── */
+    .phase-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .phase-item { display: flex; align-items: center; gap: 6px; font-size: 0.73rem; color: #C0C0C0; }
+    .phase-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .phase-dot.pre   { background: #555; }
+    .phase-dot.lime  { background: var(--lime); }
+    .phase-dot.other { background: var(--purple); }
+
+    /* ── GRID 2 COL ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+    /* ── FUNNEL ── */
+    .funnel-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 20px; }
+    .funnel { display: flex; align-items: stretch; }
+    .funnel-step { flex: 1; background: #1A1A1A; border: 1px solid var(--border); padding: 16px 10px; text-align: center; transition: background 0.2s; }
+    .funnel-step:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+    .funnel-step:last-child  { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .funnel-step:hover { background: #202020; }
+    .funnel-arrow { color: #555; font-size: 1.1rem; padding: 0 2px; display: flex; align-items: center; flex-shrink: 0; }
+    .funnel-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 0.65rem; color: #999; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+    .funnel-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.55rem; color: var(--text); }
+    .funnel-value.lime-color { color: var(--lime); }
+    .funnel-rate { font-size: 0.65rem; color: var(--lime); margin-top: 5px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    thead th { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #999; padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: right; }
+    thead th:first-child { text-align: left; }
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    tbody tr.lime-row  { background: rgba(200,255,0,0.04); }
+    tbody tr.lime-row:hover { background: rgba(200,255,0,0.07); }
+    tbody tr.other-row { background: rgba(123,45,139,0.05); }
+    tbody td { padding: 9px 14px; color: #D0D0D0; text-align: right; }
+    tbody td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+    .tag { display: inline-block; border-radius: 20px; padding: 2px 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; vertical-align: middle; margin-left: 6px; }
+    .tag-lime  { background: rgba(200,255,0,0.12); color: var(--lime); border: 1px solid var(--lime-border); }
+    .tag-other { background: rgba(123,45,139,0.15); color: #CC88FF; border: 1px solid rgba(123,45,139,0.35); }
+    .tag-pre   { background: rgba(255,255,255,0.05); color: #999; border: 1px solid rgba(255,255,255,0.1); }
+    .cpp-good { color: var(--positive) !important; font-weight: 600; }
+    .cpp-ok   { color: var(--lime)     !important; font-weight: 600; }
+    .cpp-bad  { color: var(--negative) !important; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 18px 40px; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
+    .footer-lime { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; color: var(--lime); letter-spacing: 0.1em; }
+    .footer-tagline { font-size: 0.7rem; color: #888; }
+
+    /* ── ANIMS ── */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    .kpi-card { animation: fadeUp 0.45s ease both; }
+    .kpi-card:nth-child(1) { animation-delay: 0.05s; }
+    .kpi-card:nth-child(2) { animation-delay: 0.10s; }
+    .kpi-card:nth-child(3) { animation-delay: 0.15s; }
+    .kpi-card:nth-child(4) { animation-delay: 0.20s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) { .kpi-hero { grid-template-columns: repeat(2,1fr); } .meta-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 768px)  {
+      .main { padding: 16px 16px 40px; } .header { padding: 14px 16px; flex-wrap: wrap; }
+      .kpi-hero { grid-template-columns: 1fr 1fr; } .meta-grid { grid-template-columns: repeat(2,1fr); }
+      .grid-2 { grid-template-columns: 1fr; } .filter-bar { gap: 10px; }
+      .funnel { flex-direction: column; gap: 4px; }
+      .funnel-step { border-radius: var(--radius-sm) !important; }
+      .funnel-arrow { transform: rotate(90deg); justify-content: center; }
+      footer { flex-direction: column; gap: 6px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <span class="lime-logo">
+      <svg viewBox="0 0 110 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lime">
+        <rect x="0" y="0" width="110" height="44" rx="10" ry="10" fill="#0A0A0A"/>
+        <text x="55" y="32" font-family="'Barlow Condensed', Arial Black, sans-serif" font-weight="900" font-size="28" fill="#C8FF00" text-anchor="middle" letter-spacing="3">LIME</text>
+      </svg>
+    </span>
+    <span class="header-sep">|</span>
+    <span class="header-client">Duas Rodas</span>
+  </div>
+  <div class="header-center">
+    <h1 class="header-title">FanFest MotoGP — Dashboard de Performance</h1>
+    <p class="header-subtitle">Meta Ads · Balada App · Análise completa de resultados</p>
+  </div>
+  <div class="header-right">
+    <span class="period-badge" id="periodBadge">10 FEV – 05 MAR 2026</span>
+    <span id="loadingBadge" style="display:none;background:var(--lime-dim);border:1px solid var(--lime-border);border-radius:20px;color:var(--lime);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;padding:3px 12px;letter-spacing:0.05em;animation:pulse 1s infinite;">⟳ Atualizando…</span>
+    <span class="gen-date" id="dataGeracao"></span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── FILTRO DE DATA ── -->
+  <div class="filter-bar">
+    <span class="filter-label-main">Período</span>
+    <div class="filter-shortcuts">
+      <button class="btn-filter"        id="btn-hoje"   onclick="setPreset('hoje')">Hoje</button>
+      <button class="btn-filter"        id="btn-ontem"  onclick="setPreset('ontem')">Ontem</button>
+      <button class="btn-filter"        id="btn-7d"     onclick="setPreset('7d')">7 Dias</button>
+      <button class="btn-filter active" id="btn-14d"    onclick="setPreset('14d')">14 Dias</button>
+      <button class="btn-filter"        id="btn-30d"    onclick="setPreset('30d')">30 Dias</button>
+      <button class="btn-filter"        id="btn-tudo"   onclick="setPreset('tudo')">Todo o Período</button>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-custom">
+      <span class="filter-lbl">De</span>
+      <input type="date" class="date-input" id="dateFrom" value="2026-02-10">
+      <span class="filter-lbl">Até</span>
+      <input type="date" class="date-input" id="dateTo"   value="2026-03-05">
+      <button class="btn-apply" onclick="applyCustomFilter()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="insight-box">
+    <span class="insight-icon">✱</span>
+    <p class="insight-text">
+      <strong>24/02:</strong> Lime inicia campanhas Meta Ads — vendas saem de <strong>96/dia</strong> (23/02) para <strong>265/dia</strong> (pico em 04/03), alta de <strong>+176%</strong>.
+      &nbsp;·&nbsp;
+      <strong class="purple">05/03:</strong> <span class="purple">Outra agência entra na conta.</span>
+      &nbsp;·&nbsp;
+      Receita total: <strong>R$ 501.390</strong> · <strong>559</strong> compras rastreadas · CPCompra médio: <strong>R$ 14,34</strong>
+    </p>
+  </div>
+
+  <!-- HERO KPIS -->
+  <div class="section-header">
+    <p class="section-title">Visão Geral do Evento</p>
+    <p class="section-desc">Consolidado do período selecionado — Balada App + Meta Ads</p>
+  </div>
+  <div class="kpi-hero">
+    <div class="kpi-card lime">
+      <p class="kpi-label">Total de Ingressos</p>
+      <p class="kpi-value" id="cnt-ingressos">–</p>
+      <p class="kpi-sub">Balada App</p>
+      <span class="kpi-watermark">🎟</span>
+    </div>
+    <div class="kpi-card lime">
+      <p class="kpi-label">Receita Total</p>
+      <p class="kpi-value lime-color" id="cnt-receita">–</p>
+      <p class="kpi-sub">Ticket médio ~R$ 136</p>
+      <span class="kpi-watermark">R$</span>
+    </div>
+    <div class="kpi-card purple">
+      <p class="kpi-label">Investimento Lime</p>
+      <p class="kpi-value" id="cnt-invest">–</p>
+      <p class="kpi-sub">Meta Ads · período selecionado</p>
+      <span class="kpi-watermark">📊</span>
+    </div>
+    <div class="kpi-card purple">
+      <p class="kpi-label">Compras via Meta</p>
+      <p class="kpi-value" id="cnt-compras">–</p>
+      <p class="kpi-sub" id="kpi-valor-conv" style="color:var(--lime);font-weight:700;font-size:0.82rem;margin-bottom:4px;">R$ —</p>
+      <p class="kpi-sub" id="kpi-cpp-sub">CPCompra médio: —</p>
+      <span class="kpi-watermark">🛒</span>
+    </div>
+  </div>
+
+  <!-- META CARDS -->
+  <div class="section-header">
+    <p class="section-title">Métricas de Mídia — Meta Ads</p>
+    <p class="section-desc">Campanha [LM] VENDAS FANFEST · Totais do período completo</p>
+  </div>
+  <div class="meta-grid">
+    <div class="meta-card"><p class="meta-label">Impressões</p><p class="meta-value">1,07M</p></div>
+    <div class="meta-card"><p class="meta-label">Alcance</p><p class="meta-value">252K</p></div>
+    <div class="meta-card"><p class="meta-label">Cliques</p><p class="meta-value">13.744</p></div>
+    <div class="meta-card"><p class="meta-label">CTR</p><p class="meta-value">1,29%</p></div>
+    <div class="meta-card"><p class="meta-label">CPM</p><p class="meta-value">R$ 7,51</p></div>
+    <div class="meta-card"><p class="meta-label">Frequência</p><p class="meta-value">4,23×</p></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section-header">
+    <p class="section-title">Linha do Tempo de Vendas</p>
+    <p class="section-desc">Ingressos vendidos por dia — marcos de campanha destacados</p>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Ingressos Vendidos por Dia</div>
+    <p class="chart-sub" id="tl-sub">10/02 a 05/03/2026 · Fonte: Balada App</p>
+    <div class="phase-legend">
+      <div class="phase-item"><div class="phase-dot pre"></div><span>Pré-anúncio</span></div>
+      <div class="phase-item"><div class="phase-dot lime"></div><span>✱ Lime ativa (24/02 – 04/03)</span></div>
+      <div class="phase-item"><div class="phase-dot other"></div><span>Outra agência (05/03)</span></div>
+    </div>
+    <div class="chart-wrapper" style="height:340px;"><canvas id="timelineChart"></canvas></div>
+  </div>
+
+  <!-- DUAL CHARTS -->
+  <div class="grid-2">
+    <div class="chart-card" style="margin-bottom:0;">
+      <div class="chart-title">Gasto vs. Compras — Meta Ads</div>
+      <p class="chart-sub">Período selecionado · Eixo duplo</p>
+      <div class="chart-wrapper" style="height:240px;"><canvas id="spendChart"></canvas></div>
+    </div>
+    <div class="chart-card" style="margin-bottom:0;">
+      <div class="chart-title">Custo por Compra — Diário</div>
+      <p class="chart-sub">Evolução do CPCompra · linha = média do período</p>
+      <div class="chart-wrapper" style="height:240px;"><canvas id="cppChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- FUNIL -->
+  <div class="section-header" style="margin-top:8px;">
+    <p class="section-title">Funil de Conversão Meta</p>
+    <p class="section-desc">Da impressão à compra — total do período ativo</p>
+  </div>
+  <div class="funnel-wrap">
+    <div class="funnel">
+      <div class="funnel-step"><p class="funnel-label">Impressões</p><p class="funnel-value">1,07M</p><p class="funnel-rate">100%</p></div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-step"><p class="funnel-label">Cliques</p><p class="funnel-value">13.744</p><p class="funnel-rate">CTR 1,29%</p></div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-step"><p class="funnel-label">Landing Page</p><p class="funnel-value">6.920</p><p class="funnel-rate">50,3% dos cliques</p></div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-step"><p class="funnel-label">Add to Cart</p><p class="funnel-value">2.222</p><p class="funnel-rate">32,1% da LP</p></div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-step"><p class="funnel-label">Checkout</p><p class="funnel-value">2.194</p><p class="funnel-rate">98,7% do ATC</p></div>
+      <span class="funnel-arrow">›</span>
+      <div class="funnel-step"><p class="funnel-label">Compras</p><p class="funnel-value lime-color">559</p><p class="funnel-rate">25,5% do checkout</p></div>
+    </div>
+  </div>
+
+  <!-- TABELA -->
+  <div class="section-header">
+    <p class="section-title">Detalhamento Diário</p>
+    <p class="section-desc">Balada App + Meta Ads combinados — período selecionado</p>
+  </div>
+  <div class="chart-card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Data</th>
+            <th>Ingressos</th><th>Receita</th><th>Gasto Meta</th>
+            <th>Compras</th><th>CPCompra</th><th>Impressões</th><th>ATC</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="footer-lime">
+    <svg viewBox="0 0 88 34" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="88" height="34" rx="8" ry="8" fill="#0A0A0A"/>
+      <text x="44" y="25" font-family="'Barlow Condensed', Arial Black, sans-serif" font-weight="900" font-size="22" fill="#C8FF00" text-anchor="middle" letter-spacing="2">LIME</text>
+    </svg>
+  </span>
+  <span class="footer-tagline">Transformamos caos em crescimento · Branding · Performance · Conteúdo · Experiência</span>
+  <span class="footer-tagline">Gerado em <span id="footerDate"></span></span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+/* Vendas (Balada App) — Google Sheets, atualiza ao editar a planilha */
+const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTBE4MOtvUgDL2FJ20cR4vFMxB5HnwmznfCJvWsKn6XrXOcA1Q0USUdDZwRGzNW5frdkWvOND8_VXNE/pub?output=csv';
+/* Meta Ads — JSON gerado diariamente pelo update-meta-ads.ps1 via API */
+const META_JSON_URL  = 'meta-data.json';
+
+/* Dados de fallback (usados se o fetch falhar) */
+const vendasFallback = [
+  { data:'10/02', ingressos:464, receita:57030,  fase:0 },
+  { data:'11/02', ingressos:285, receita:38170,  fase:0 },
+  { data:'12/02', ingressos:142, receita:17120,  fase:0 },
+  { data:'13/02', ingressos:131, receita:15680,  fase:0 },
+  { data:'14/02', ingressos:110, receita:15870,  fase:0 },
+  { data:'15/02', ingressos:92,  receita:9780,   fase:0 },
+  { data:'16/02', ingressos:109, receita:14060,  fase:0 },
+  { data:'17/02', ingressos:87,  receita:9880,   fase:0 },
+  { data:'18/02', ingressos:110, receita:12880,  fase:0 },
+  { data:'19/02', ingressos:120, receita:16500,  fase:0 },
+  { data:'20/02', ingressos:107, receita:10790,  fase:0 },
+  { data:'21/02', ingressos:93,  receita:12450,  fase:0 },
+  { data:'22/02', ingressos:85,  receita:10970,  fase:0 },
+  { data:'23/02', ingressos:96,  receita:10760,  fase:0 },
+  { data:'24/02', ingressos:81,  receita:11350,  fase:1 },
+  { data:'25/02', ingressos:106, receita:14830,  fase:1 },
+  { data:'26/02', ingressos:117, receita:20820,  fase:1 },
+  { data:'27/02', ingressos:130, receita:15200,  fase:1 },
+  { data:'28/02', ingressos:145, receita:27420,  fase:1 },
+  { data:'01/03', ingressos:210, receita:30080,  fase:1 },
+  { data:'02/03', ingressos:208, receita:29300,  fase:1 },
+  { data:'03/03', ingressos:203, receita:35420,  fase:1 },
+  { data:'04/03', ingressos:265, receita:36970,  fase:1 },
+  { data:'05/03', ingressos:191, receita:28060,  fase:2 },
+];
+
+let vendasDiarias = [];
+
+/* Fallback Meta Ads (usado se o fetch falhar) */
+const metaFallback = [
+  { data:'24/02', compras:0,  gasto:132.88,  cpp:null,  impressoes:22287,  atc:0 },
+  { data:'25/02', compras:0,  gasto:328.14,  cpp:null,  impressoes:36321,  atc:0 },
+  { data:'26/02', compras:8,  gasto:577.15,  cpp:72.14, impressoes:81105,  atc:37 },
+  { data:'27/02', compras:53, gasto:865.60,  cpp:16.33, impressoes:108808, atc:182 },
+  { data:'28/02', compras:40, gasto:836.63,  cpp:20.92, impressoes:124471, atc:165 },
+  { data:'01/03', compras:71, gasto:1090.87, cpp:15.36, impressoes:136041, atc:311 },
+  { data:'02/03', compras:82, gasto:894.36,  cpp:10.91, impressoes:122123, atc:348 },
+  { data:'03/03', compras:77, gasto:936.54,  cpp:12.16, impressoes:139373, atc:232 },
+  { data:'04/03', compras:94, gasto:836.59,  cpp:8.90,  impressoes:105818, atc:333 },
+  { data:'05/03', compras:85, gasto:822.90,  cpp:9.68,  impressoes:98375,  atc:321 },
+  { data:'06/03', compras:49, gasto:695.91,  cpp:14.20, impressoes:92258,  atc:293 },
+];
+
+let metaDiario = [];
+
+/* ═══════════════════════════════════════
+   HELPERS DE DATA
+═══════════════════════════════════════ */
+function parseDDMM(str) {
+  const [d, m] = str.split('/').map(Number);
+  return new Date(2026, m - 1, d);
+}
+function parseISO(str) {
+  // "YYYY-MM-DD"
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+function fmtShort(date) {
+  return date.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }).toUpperCase().replace('.','');
+}
+
+/* ═══════════════════════════════════════
+   CHART DEFAULTS
+═══════════════════════════════════════ */
+Chart.defaults.color = '#888';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+const gridLine = { color: 'rgba(255,255,255,0.06)', drawBorder: false };
+const tooltipBase = {
+  backgroundColor: '#1C1C1C', borderColor: 'rgba(200,255,0,0.25)', borderWidth: 1,
+  titleColor: '#C8FF00', bodyColor: '#D8D8D8', padding: 12, cornerRadius: 8,
+};
+
+/* ═══════════════════════════════════════
+   CHART INSTANCES
+═══════════════════════════════════════ */
+let tlChart, spendChartInst, cppChartInst;
+let currentVF = [], currentMF = [];
+
+function initCharts(vf, mf) {
+  currentVF = vf;
+  currentMF = mf;
+  /* 1. TIMELINE */
+  const segColor = (idx, data) => {
+    if (!data[idx]) return '#555';
+    const f = data[idx].fase;
+    return f === 0 ? '#555555' : f === 1 ? '#C8FF00' : '#9B3DAB';
+  };
+
+  tlChart = new Chart(document.getElementById('timelineChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: vf.map(d => d.data),
+      datasets: [{
+        label: 'Ingressos/dia',
+        data: vf.map(d => d.ingressos),
+        segment: { borderColor: ctx => segColor(ctx.p0DataIndex, vf) },
+        pointBackgroundColor: vf.map(d => d.fase===0?'#555':d.fase===1?'#C8FF00':'#9B3DAB'),
+        pointBorderColor: 'transparent', pointRadius: 5, pointHoverRadius: 7,
+        borderWidth: 2.5, tension: 0.32, fill: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...tooltipBase,
+          callbacks: {
+            title: items => {
+              const d = currentVF[items[0].dataIndex];
+              if (!d) return '';
+              const tag = d.fase===0?'Pré-anúncio':d.fase===1?'✱ Lime ativa':'Outra agência';
+              return `${d.data}  ·  ${tag}`;
+            },
+            label: items => {
+              const d = currentVF[items.dataIndex];
+              if (!d) return '';
+              return [` Ingressos : ${d.ingressos.toLocaleString('pt-BR')}`, ` Receita   : R$ ${d.receita.toLocaleString('pt-BR')}`];
+            },
+            afterLabel: items => {
+              const d = currentVF[items.dataIndex];
+              if (!d) return '';
+              const meta = currentMF.find(m => m.data === d.data);
+              if (!meta) return '';
+              return [` Gasto Meta: R$ ${meta.gasto.toLocaleString('pt-BR',{minimumFractionDigits:2})}`, ` Compras   : ${meta.compras}`];
+            }
+          }
+        },
+        annotation: { annotations: buildAnnotations(vf) }
+      },
+      scales: {
+        x: { grid: gridLine, ticks: { color: '#888', font:{size:10}, maxRotation:45 } },
+        y: { grid: gridLine, ticks: { color: '#888', callback: v => v.toLocaleString('pt-BR') }, title: { display:true, text:'Ingressos vendidos', color:'#777', font:{size:10} } }
+      }
+    }
+  });
+
+  /* 2. GASTO vs COMPRAS */
+  spendChartInst = new Chart(document.getElementById('spendChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: mf.map(d => d.data),
+      datasets: [
+        { type:'bar',  label:'Gasto (R$)', data: mf.map(d=>d.gasto), backgroundColor:'rgba(200,255,0,0.18)', borderColor:'rgba(200,255,0,0.55)', borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { type:'line', label:'Compras',    data: mf.map(d=>d.compras), borderColor:'#9B3DAB', backgroundColor:'rgba(123,45,139,0.1)', borderWidth:2.5, pointBackgroundColor:'#9B3DAB', pointRadius:4, tension:0.3, yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display:true, labels: { color:'#AAA', font:{size:10}, boxWidth:10, padding:14 } },
+        tooltip: { ...tooltipBase, callbacks: { label: item => item.dataset.yAxisID==='y' ? ` Gasto: R$ ${item.raw.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : ` Compras: ${item.raw}` } }
+      },
+      scales: {
+        x:  { grid: gridLine, ticks: { color:'#888', font:{size:10} } },
+        y:  { grid: gridLine, ticks: { color:'#888', callback: v => `R$${(v/1000).toFixed(0)}K` }, title: { display:true, text:'Gasto (R$)', color:'#777', font:{size:9} } },
+        y2: { grid: { display:false }, position:'right', ticks: { color:'#888' }, title: { display:true, text:'Compras', color:'#777', font:{size:9} } }
+      }
+    }
+  });
+
+  /* 3. CPP */
+  const cppF = mf.filter(d => d.cpp !== null);
+  const avgCpp = cppF.length ? cppF.reduce((s,d)=>s+d.cpp,0)/cppF.length : 14.34;
+  cppChartInst = new Chart(document.getElementById('cppChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: cppF.map(d => d.data),
+      datasets: [{
+        label: 'CPCompra (R$)', data: cppF.map(d=>d.cpp),
+        borderColor: '#C8FF00', backgroundColor: 'rgba(200,255,0,0.07)',
+        borderWidth: 2.5,
+        pointBackgroundColor: cppF.map(d => d.cpp<=11?'#00FF88':d.cpp<=16?'#C8FF00':'#FF4444'),
+        pointBorderColor: 'transparent', pointRadius: 5, pointHoverRadius: 7,
+        tension: 0.35, fill: true,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display:false },
+        tooltip: { ...tooltipBase, callbacks: { label: item => ` CPCompra: R$ ${item.raw.toFixed(2).replace('.',',')}` } },
+        annotation: { annotations: { avgLine: buildAvgLine(avgCpp) } }
+      },
+      scales: {
+        x: { grid: gridLine, ticks: { color:'#888', font:{size:10} } },
+        y: { grid: gridLine, ticks: { color:'#888', callback: v=>`R$${v.toFixed(0)}` }, title: { display:true, text:'R$ por compra', color:'#777', font:{size:10} } }
+      }
+    }
+  });
+}
+
+/* ── Build annotation objects ── */
+function buildAnnotations(vf) {
+  const limeIdx  = vf.findIndex(d => d.data === '24/02');
+  const otherIdx = vf.findIndex(d => d.data === '05/03');
+  const ann = {};
+
+  ann.bgPre = { type:'box', xMin:-0.5, xMax: limeIdx>=0 ? limeIdx-0.5 : vf.length, backgroundColor:'rgba(85,85,85,0.04)', borderColor:'transparent' };
+
+  if (limeIdx >= 0) {
+    ann.bgLime = { type:'box', xMin:limeIdx-0.5, xMax: otherIdx>=0 ? otherIdx-0.5 : vf.length+0.5, backgroundColor:'rgba(200,255,0,0.04)', borderColor:'transparent' };
+    ann.limeStart = {
+      type:'line', xMin:limeIdx, xMax:limeIdx,
+      borderColor:'rgba(200,255,0,0.65)', borderWidth:2, borderDash:[6,4],
+      label: { display:true, content:'✱ LIME ANUNCIA', position:'start', backgroundColor:'rgba(200,255,0,0.12)', borderColor:'rgba(200,255,0,0.35)', borderWidth:1, borderRadius:5, color:'#C8FF00', font:{family:"'Barlow Condensed',sans-serif",size:11,weight:'700'}, padding:{x:8,y:5}, yAdjust:10 }
+    };
+  }
+  if (otherIdx >= 0) {
+    ann.bgOther = { type:'box', xMin:otherIdx-0.5, xMax:vf.length+0.5, backgroundColor:'rgba(123,45,139,0.07)', borderColor:'transparent' };
+    ann.otherStart = {
+      type:'line', xMin:otherIdx, xMax:otherIdx,
+      borderColor:'rgba(155,61,171,0.65)', borderWidth:2, borderDash:[6,4],
+      label: { display:true, content:'OUTRA AGÊNCIA', position:'start', backgroundColor:'rgba(123,45,139,0.18)', borderColor:'rgba(123,45,139,0.4)', borderWidth:1, borderRadius:5, color:'#CC88FF', font:{family:"'Barlow Condensed',sans-serif",size:11,weight:'700'}, padding:{x:8,y:5}, yAdjust:40 }
+    };
+  }
+  return ann;
+}
+
+function buildAvgLine(avg) {
+  return {
+    type:'line', yMin:avg, yMax:avg,
+    borderColor:'rgba(255,68,68,0.5)', borderWidth:1.5, borderDash:[5,4],
+    label: { display:true, content:`Média R$ ${avg.toFixed(2).replace('.',',')}`, position:'end', backgroundColor:'rgba(255,68,68,0.12)', borderColor:'rgba(255,68,68,0.3)', borderWidth:1, borderRadius:4, color:'#FF8888', font:{family:"'Barlow Condensed',sans-serif",size:10,weight:'700'}, padding:{x:6,y:4} }
+  };
+}
+
+/* ═══════════════════════════════════════
+   RENDER FUNCTIONS
+═══════════════════════════════════════ */
+function renderKPIs(vf, mf) {
+  const totalIngressos = vf.reduce((s,d)=>s+d.ingressos,0);
+  const totalReceita   = vf.reduce((s,d)=>s+d.receita,0);
+  const totalInvest    = mf.reduce((s,d)=>s+d.gasto,0);
+  const totalCompras   = mf.reduce((s,d)=>s+d.compras,0);
+  const totalValorConv = mf.reduce((s,d)=>s+(d.valorConv||0),0);
+  const cppArr         = mf.filter(d=>d.cpp!==null);
+  const avgCpp         = cppArr.length ? (totalInvest / totalCompras) : 0;
+
+  document.getElementById('cnt-ingressos').textContent = totalIngressos.toLocaleString('pt-BR');
+  document.getElementById('cnt-receita').textContent   = 'R$ ' + totalReceita.toLocaleString('pt-BR');
+  document.getElementById('cnt-invest').textContent    = 'R$ ' + totalInvest.toLocaleString('pt-BR',{minimumFractionDigits:2});
+  document.getElementById('cnt-compras').textContent   = totalCompras.toLocaleString('pt-BR');
+  document.getElementById('kpi-valor-conv').textContent = totalValorConv > 0 ? 'R$ ' + totalValorConv.toLocaleString('pt-BR',{minimumFractionDigits:2}) + ' em conversões' : '';
+  document.getElementById('kpi-cpp-sub').textContent   = totalCompras > 0 ? `CPCompra médio: R$ ${avgCpp.toFixed(2).replace('.',',')}` : 'Sem compras no período';
+}
+
+function renderCharts(vf, mf) {
+  currentVF = vf;
+  currentMF = mf;
+  // Timeline
+  tlChart.data.labels = vf.map(d => d.data);
+  tlChart.data.datasets[0].data = vf.map(d => d.ingressos);
+  tlChart.data.datasets[0].segment = { borderColor: ctx => { const d=vf[ctx.p0DataIndex]; if(!d)return'#555'; return d.fase===0?'#555555':d.fase===1?'#C8FF00':'#9B3DAB'; } };
+  tlChart.data.datasets[0].pointBackgroundColor = vf.map(d=>d.fase===0?'#555':d.fase===1?'#C8FF00':'#9B3DAB');
+  tlChart.options.plugins.annotation.annotations = buildAnnotations(vf);
+  tlChart.update();
+
+  // Spend
+  spendChartInst.data.labels = mf.map(d=>d.data);
+  spendChartInst.data.datasets[0].data = mf.map(d=>d.gasto);
+  spendChartInst.data.datasets[1].data = mf.map(d=>d.compras);
+  spendChartInst.update();
+
+  // CPP
+  const cppF = mf.filter(d=>d.cpp!==null);
+  const avgCpp = cppF.length ? cppF.reduce((s,d)=>s+d.cpp,0)/cppF.length : 14.34;
+  cppChartInst.data.labels = cppF.map(d=>d.data);
+  cppChartInst.data.datasets[0].data = cppF.map(d=>d.cpp);
+  cppChartInst.data.datasets[0].pointBackgroundColor = cppF.map(d=>d.cpp<=11?'#00FF88':d.cpp<=16?'#C8FF00':'#FF4444');
+  cppChartInst.options.plugins.annotation.annotations.avgLine = buildAvgLine(avgCpp);
+  cppChartInst.update();
+}
+
+function renderTable(vf, mf) {
+  const tbody = document.getElementById('tableBody');
+  const metaMap = {};
+  mf.forEach(d => metaMap[d.data] = d);
+  tbody.innerHTML = '';
+  const fmtBRL = n => n ? `R$ ${n.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—';
+  const fmtN   = n => n != null ? n.toLocaleString('pt-BR') : '—';
+
+  vf.forEach(d => {
+    const m = metaMap[d.data];
+    const rowClass = d.fase===1?'lime-row':d.fase===2?'other-row':'';
+    const tag = d.fase===0 ? '<span class="tag tag-pre">pré-anúncio</span>' : d.fase===1 ? '<span class="tag tag-lime">✱ Lime</span>' : '<span class="tag tag-other">Outra agência</span>';
+    let cppHtml = '—';
+    if (m && m.cpp !== null) {
+      const cls = m.cpp<=11?'cpp-good':m.cpp<=16?'cpp-ok':'cpp-bad';
+      cppHtml = `<span class="${cls}">R$ ${m.cpp.toFixed(2).replace('.',',')}</span>`;
+    }
+    tbody.innerHTML += `<tr class="${rowClass}">
+      <td>${d.data}${tag}</td>
+      <td>${fmtN(d.ingressos)}</td>
+      <td>R$ ${d.receita.toLocaleString('pt-BR')}</td>
+      <td>${m?fmtBRL(m.gasto):'—'}</td>
+      <td>${m?fmtN(m.compras):'—'}</td>
+      <td>${cppHtml}</td>
+      <td>${m?fmtN(m.impressoes):'—'}</td>
+      <td>${m?fmtN(m.atc):'—'}</td>
+    </tr>`;
+  });
+}
+
+/* ═══════════════════════════════════════
+   FILTER ENGINE
+═══════════════════════════════════════ */
+function filterData(fromDate, toDate) {
+  const vf = vendasDiarias.filter(d => { const dt=parseDDMM(d.data); return dt>=fromDate && dt<=toDate; });
+  const mf = metaDiario.filter(d    => { const dt=parseDDMM(d.data); return dt>=fromDate && dt<=toDate; });
+  return { vf, mf };
+}
+
+function applyFilter(fromDate, toDate, activeBtn) {
+  // buttons
+  document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+  if (activeBtn) document.getElementById(activeBtn).classList.add('active');
+
+  // inputs
+  document.getElementById('dateFrom').value = fromDate.toISOString().slice(0,10);
+  document.getElementById('dateTo').value   = toDate.toISOString().slice(0,10);
+
+  // badge
+  document.getElementById('periodBadge').textContent = `${fmtShort(fromDate)} – ${fmtShort(toDate)} 2026`;
+
+  // subtitle
+  document.getElementById('tl-sub').textContent = `${fromDate.toLocaleDateString('pt-BR')} a ${toDate.toLocaleDateString('pt-BR')} · Fonte: Balada App`;
+
+  const { vf, mf } = filterData(fromDate, toDate);
+  renderKPIs(vf, mf);
+  renderCharts(vf, mf);
+  renderTable(vf, mf);
+}
+
+/* ── Presets ── */
+function setPreset(id) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const daysAgo = n => { const d = new Date(today); d.setDate(d.getDate() - n); return d; };
+  let from, to;
+  if (id === 'hoje')  { from = today;       to = today;       }
+  if (id === 'ontem') { from = daysAgo(1);  to = daysAgo(1);  }
+  if (id === '7d')    { from = daysAgo(6);  to = today;       }
+  if (id === '14d')   { from = daysAgo(13); to = today;       }
+  if (id === '30d')   { from = daysAgo(29); to = today;       }
+  if (id === 'tudo') {
+    const allDates = [...vendasDiarias, ...metaDiario].map(d => parseDDMM(d.data)).filter(d => !isNaN(d));
+    from = allDates.length ? new Date(Math.min(...allDates)) : daysAgo(89);
+    to   = allDates.length ? new Date(Math.max(...allDates)) : today;
+  }
+  applyFilter(from, to, 'btn-' + id);
+}
+
+function applyCustomFilter() {
+  const from = parseISO(document.getElementById('dateFrom').value);
+  const to   = parseISO(document.getElementById('dateTo').value);
+  if (isNaN(from) || isNaN(to) || from > to) return;
+  applyFilter(from, to, null);
+}
+
+/* ═══════════════════════════════════════
+   INIT  (busca dados do Google Sheets)
+═══════════════════════════════════════ */
+async function initDashboard() {
+  // Indicador de carregamento
+  document.getElementById('loadingBadge').style.display = 'inline-flex';
+
+  // Busca as duas abas da planilha em paralelo
+  await Promise.allSettled([
+
+    // ── Aba 1: Vendas (Balada App) ──
+    fetch(SHEETS_CSV_URL).then(r => r.text()).then(text => {
+      const rows = text.trim().replace(/\r/g, '').split('\n').slice(1);
+      const parsed = rows.map(line => {
+        const cols     = line.split(',');
+        const dataFull = (cols[0] || '').trim();    // DD/MM/YYYY
+        const parts    = dataFull.split('/');
+        const d = parts[0], m = parts[1];
+        return {
+          data:      d && m ? d + '/' + m : '',     // → DD/MM
+          ingressos: parseInt(cols[1]) || 0,
+          receita:   parseInt(cols[2]) || 0,
+          fase:      parseInt(cols[3]) || 0,
+        };
+      }).filter(r => r.data && r.ingressos > 0);
+      if (parsed.length > 0) vendasDiarias = parsed;
+      else throw new Error('CSV vendas vazio');
+    }).catch(e => {
+      console.warn('Vendas: fallback ativo —', e.message);
+      vendasDiarias = [...vendasFallback];
+    }),
+
+    // ── Meta Ads (JSON gerado pela API via update-meta-ads.ps1) ──
+    fetch(META_JSON_URL).then(r => r.json()).then(json => {
+      if (!json.data || json.data.length === 0) throw new Error('JSON meta vazio');
+      metaDiario = json.data;  // já está no formato correto: { data, compras, gasto, cpp, impressoes, alcance, cliques, atc }
+      document.getElementById('loadingBadge').title = '✓ Meta Ads via API · Atualizado: ' + (json.updated || '');
+    }).catch(e => {
+      console.warn('Meta Ads: fallback ativo —', e.message);
+      metaDiario = [...metaFallback];
+    }),
+
+  ]);
+
+  document.getElementById('loadingBadge').style.display = 'none';
+
+  // Inicia com "14 Dias" selecionado
+  const initTo   = new Date(); initTo.setHours(0,0,0,0);
+  const initFrom = new Date(initTo); initFrom.setDate(initTo.getDate() - 13);
+  const { vf: vfInit, mf: mfInit } = filterData(initFrom, initTo);
+
+  initCharts(vfInit, mfInit);
+  renderKPIs(vfInit, mfInit);
+  renderTable(vfInit, mfInit);
+
+  const now   = new Date();
+  const dtStr = now.toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dataGeracao').textContent = 'Gerado em ' + dtStr;
+  document.getElementById('footerDate').textContent  = dtStr;
+}
+
+initDashboard();
+</script>
+</body>
+</html>
