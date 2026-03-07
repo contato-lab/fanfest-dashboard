@@ -1,0 +1,30 @@
+name: Atualizar Meta Ads
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Buscar dados do Meta Ads
+        env:
+          META_TOKEN: ${{ secrets.META_TOKEN }}
+          META_ACCT: act_2044706169171045
+        run: python update-meta-ads.py
+
+      - name: Commitar meta-data.json atualizado
+        run: |
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add meta-data.json
+          git diff --staged --quiet || git commit -m "Meta Ads: $(date +'%d/%m/%Y %H:%M')"
+          git push
