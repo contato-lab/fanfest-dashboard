@@ -434,8 +434,8 @@
 ═══════════════════════════════════════ */
 /* Vendas (Balada App) — Google Sheets, atualiza ao editar a planilha */
 const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTBE4MOtvUgDL2FJ20cR4vFMxB5HnwmznfCJvWsKn6XrXOcA1Q0USUdDZwRGzNW5frdkWvOND8_VXNE/pub?output=csv';
-/* Meta Ads — Vercel Serverless Function (real-time, atualiza a cada 5 min) */
-const META_JSON_URL  = 'https://fanfest-dashboard.vercel.app/api/meta-data';
+/* Meta Ads — GitHub Actions a cada 5 min (semi-automatizado, custo zero) */
+const META_JSON_URL  = 'meta-data.json';
 
 /* Dados de fallback (usados se o fetch falhar) */
 const vendasFallback = [
@@ -834,7 +834,7 @@ async function initDashboard() {
     }),
 
     // ── Meta Ads (JSON gerado pela API via update-meta-ads.ps1) ──
-    fetch(META_JSON_URL).then(r => r.json()).then(json => {
+    fetch(META_JSON_URL, { cache: 'no-store' }).then(r => r.json()).then(json => {
       if (!json.data || json.data.length === 0) throw new Error('JSON meta vazio');
       metaDiario = json.data;  // já está no formato correto: { data, compras, gasto, cpp, impressoes, alcance, cliques, atc }
       document.getElementById('loadingBadge').title = '✓ Meta Ads via API · Atualizado: ' + (json.updated || '');
