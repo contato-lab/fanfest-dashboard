@@ -855,6 +855,12 @@ async function initDashboard() {
   initCharts(vfInit, mfInit);
   renderKPIs(vfInit, mfInit);
   renderTable(vfInit, mfInit);
+  // Sincroniza inputs/botao com filtro inicial para refreshMeta() ler corretamente
+  document.getElementById("dateFrom").value = initFrom.toISOString().slice(0,10);
+  document.getElementById("dateTo").value   = initTo.toISOString().slice(0,10);
+  document.getElementById("btn-14d").classList.add("active");
+  document.getElementById('periodBadge').textContent = `${fmtShort(initFrom)} – ${fmtShort(initTo)} 2026`;
+  document.getElementById('tl-sub').textContent = `${initFrom.toLocaleDateString('pt-BR')} a ${initTo.toLocaleDateString('pt-BR')} · Fonte: Balada App`;
 
   const now   = new Date();
   const dtStr = now.toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -871,10 +877,11 @@ async function refreshMeta() {
     metaDiario = json.data;
     const badge = document.getElementById('loadingBadge');
     if (badge) badge.title = '✓ Meta Ads · Atualizado: ' + (json.updated || '');
-    // Re-aplica o filtro ativo sem alterar botões/inputs
+    // Re-aplica o filtro ativo preservando o botão selecionado
+    const activeBtn = document.querySelector('.btn-filter.active');
     const from = parseISO(document.getElementById('dateFrom').value);
     const to   = parseISO(document.getElementById('dateTo').value);
-    if (!isNaN(from) && !isNaN(to)) applyFilter(from, to, null);
+    if (!isNaN(from) && !isNaN(to)) applyFilter(from, to, activeBtn ? activeBtn.id : null);
   } catch(e) { console.warn('Auto-refresh Meta falhou:', e.message); }
 }
 setInterval(refreshMeta, 5 * 60 * 1000); // 5 minutos
