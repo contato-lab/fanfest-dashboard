@@ -434,8 +434,8 @@
 ═══════════════════════════════════════ */
 /* Vendas (Balada App) — Google Sheets, atualiza ao editar a planilha */
 const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTBE4MOtvUgDL2FJ20cR4vFMxB5HnwmznfCJvWsKn6XrXOcA1Q0USUdDZwRGzNW5frdkWvOND8_VXNE/pub?output=csv';
-/* Meta Ads — JSON gerado diariamente pelo update-meta-ads.ps1 via API */
-const META_JSON_URL  = 'meta-data.json';
+/* Meta Ads — Vercel Serverless Function (real-time, atualiza a cada 5 min) */
+const META_JSON_URL  = 'https://fanfest-dashboard.vercel.app/api/meta-data';
 
 /* Dados de fallback (usados se o fetch falhar) */
 const vendasFallback = [
@@ -862,7 +862,22 @@ async function initDashboard() {
   document.getElementById('footerDate').textContent  = dtStr;
 }
 
-initDashboard();
+
+// ── Auto-refresh Meta Ads a cada 5 minutos ──────────────────────────────────
+async function refreshMeta() {
+  try {
+    const json = await fetch(META_JSON_URL + '?t=' + Date.now()).then(r => r.json());
+    if (!json.data || json.data.length === 0) return;
+    metaDiario = json.data;
+    const badge = document.getElementById('loadingBadge');
+    if (badge) badge.title = '✓ Meta Ads · Atualizado: ' + (json.updated || '');
+    // Re-aplica o filtro ativo sem alterar botões/inputs
+    const from = parseISO(document.getElementById('dateFrom').value);
+    const to   = parseISO(document.getElementById('dateTo').value);
+    if (!isNaN(from) && !isNaN(to)) applyFilter(from, to, null);
+  } catch(e) { console.warn('Auto-refresh Meta falhou:', e.message); }
+}
+setInterval(refreshMeta, 5 * 60 * 1000); // 5 minutos
 </script>
 </body>
 </html>
