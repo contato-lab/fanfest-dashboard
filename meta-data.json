@@ -1,137 +1,148 @@
-﻿{
-    "updated":  "07/03/2026 10:48",
-    "data":  [
-                 {
-                     "data":  "24/02",
-                     "compras":  0,
-                     "gasto":  132.88,
-                     "cpp":  null,
-                     "valorConv":  0,
-                     "impressoes":  22287,
-                     "alcance":  20367,
-                     "cliques":  205,
-                     "atc":  0
-                 },
-                 {
-                     "data":  "25/02",
-                     "compras":  0,
-                     "gasto":  328.14,
-                     "cpp":  null,
-                     "valorConv":  0,
-                     "impressoes":  36321,
-                     "alcance":  19907,
-                     "cliques":  799,
-                     "atc":  0
-                 },
-                 {
-                     "data":  "26/02",
-                     "compras":  8,
-                     "gasto":  627.68,
-                     "cpp":  78.46,
-                     "valorConv":  1830,
-                     "impressoes":  88227,
-                     "alcance":  54378,
-                     "cliques":  1251,
-                     "atc":  37
-                 },
-                 {
-                     "data":  "27/02",
-                     "compras":  53,
-                     "gasto":  965.93,
-                     "cpp":  18.23,
-                     "valorConv":  10770,
-                     "impressoes":  131538,
-                     "alcance":  75950,
-                     "cliques":  2316,
-                     "atc":  182
-                 },
-                 {
-                     "data":  "28/02",
-                     "compras":  40,
-                     "gasto":  914.94,
-                     "cpp":  22.87,
-                     "valorConv":  9440,
-                     "impressoes":  147201,
-                     "alcance":  87355,
-                     "cliques":  2092,
-                     "atc":  165
-                 },
-                 {
-                     "data":  "01/03",
-                     "compras":  71,
-                     "gasto":  1198.61,
-                     "cpp":  16.88,
-                     "valorConv":  18460,
-                     "impressoes":  178637,
-                     "alcance":  99801,
-                     "cliques":  3346,
-                     "atc":  311
-                 },
-                 {
-                     "data":  "02/03",
-                     "compras":  82,
-                     "gasto":  992.26,
-                     "cpp":  12.10,
-                     "valorConv":  16160,
-                     "impressoes":  160718,
-                     "alcance":  88950,
-                     "cliques":  2781,
-                     "atc":  348
-                 },
-                 {
-                     "data":  "03/03",
-                     "compras":  77,
-                     "gasto":  1019.23,
-                     "cpp":  13.24,
-                     "valorConv":  17890,
-                     "impressoes":  166911,
-                     "alcance":  86428,
-                     "cliques":  2282,
-                     "atc":  232
-                 },
-                 {
-                     "data":  "04/03",
-                     "compras":  94,
-                     "gasto":  940.06,
-                     "cpp":  10.00,
-                     "valorConv":  21190,
-                     "impressoes":  138903,
-                     "alcance":  78860,
-                     "cliques":  2082,
-                     "atc":  333
-                 },
-                 {
-                     "data":  "05/03",
-                     "compras":  85,
-                     "gasto":  922.22,
-                     "cpp":  10.85,
-                     "valorConv":  17460,
-                     "impressoes":  126677,
-                     "alcance":  70776,
-                     "cliques":  2079,
-                     "atc":  321
-                 },
-                 {
-                     "data":  "06/03",
-                     "compras":  71,
-                     "gasto":  963.28,
-                     "cpp":  13.57,
-                     "valorConv":  17660,
-                     "impressoes":  136114,
-                     "alcance":  78235,
-                     "cliques":  1787,
-                     "atc":  437
-                 },
-                 {
-                     "data":  "07/03",
-                     "compras":  19,
-                     "gasto":  276.98,
-                     "cpp":  14.58,
-                     "valorConv":  4890,
-                     "impressoes":  32087,
-                     "alcance":  23791,
-                     "cliques":  450,
-                     "atc":  70
-                 }
-             ]
+{
+  "updated": "08/03/2026 12:57",
+  "data": [
+    {
+      "data": "24/02",
+      "compras": 0,
+      "gasto": 132.88,
+      "cpp": null,
+      "valorConv": 0.0,
+      "impressoes": 22287,
+      "alcance": 20367,
+      "cliques": 205,
+      "atc": 0
+    },
+    {
+      "data": "25/02",
+      "compras": 0,
+      "gasto": 328.14,
+      "cpp": null,
+      "valorConv": 0.0,
+      "impressoes": 36321,
+      "alcance": 19907,
+      "cliques": 799,
+      "atc": 0
+    },
+    {
+      "data": "26/02",
+      "compras": 8,
+      "gasto": 627.68,
+      "cpp": 78.46,
+      "valorConv": 1830.0,
+      "impressoes": 88227,
+      "alcance": 54378,
+      "cliques": 1251,
+      "atc": 37
+    },
+    {
+      "data": "27/02",
+      "compras": 53,
+      "gasto": 965.93,
+      "cpp": 18.23,
+      "valorConv": 10770.0,
+      "impressoes": 131538,
+      "alcance": 75950,
+      "cliques": 2316,
+      "atc": 182
+    },
+    {
+      "data": "28/02",
+      "compras": 40,
+      "gasto": 914.94,
+      "cpp": 22.87,
+      "valorConv": 9440.0,
+      "impressoes": 147201,
+      "alcance": 87355,
+      "cliques": 2092,
+      "atc": 165
+    },
+    {
+      "data": "01/03",
+      "compras": 71,
+      "gasto": 1198.61,
+      "cpp": 16.88,
+      "valorConv": 18460.0,
+      "impressoes": 178637,
+      "alcance": 99801,
+      "cliques": 3346,
+      "atc": 311
+    },
+    {
+      "data": "02/03",
+      "compras": 82,
+      "gasto": 992.26,
+      "cpp": 12.1,
+      "valorConv": 16160.0,
+      "impressoes": 160718,
+      "alcance": 88950,
+      "cliques": 2781,
+      "atc": 348
+    },
+    {
+      "data": "03/03",
+      "compras": 77,
+      "gasto": 1019.23,
+      "cpp": 13.24,
+      "valorConv": 17890.0,
+      "impressoes": 166911,
+      "alcance": 86428,
+      "cliques": 2282,
+      "atc": 232
+    },
+    {
+      "data": "04/03",
+      "compras": 94,
+      "gasto": 940.06,
+      "cpp": 10.0,
+      "valorConv": 21190.0,
+      "impressoes": 138903,
+      "alcance": 78860,
+      "cliques": 2082,
+      "atc": 333
+    },
+    {
+      "data": "05/03",
+      "compras": 85,
+      "gasto": 922.22,
+      "cpp": 10.85,
+      "valorConv": 17460.0,
+      "impressoes": 126677,
+      "alcance": 70776,
+      "cliques": 2079,
+      "atc": 321
+    },
+    {
+      "data": "06/03",
+      "compras": 71,
+      "gasto": 963.37,
+      "cpp": 13.57,
+      "valorConv": 17660.0,
+      "impressoes": 136125,
+      "alcance": 78235,
+      "cliques": 1787,
+      "atc": 437
+    },
+    {
+      "data": "07/03",
+      "compras": 105,
+      "gasto": 1118.86,
+      "cpp": 10.66,
+      "valorConv": 27060.0,
+      "impressoes": 148921,
+      "alcance": 87374,
+      "cliques": 1953,
+      "atc": 364
+    },
+    {
+      "data": "08/03",
+      "compras": 7,
+      "gasto": 278.3,
+      "cpp": 39.76,
+      "valorConv": 1400.0,
+      "impressoes": 39030,
+      "alcance": 28609,
+      "cliques": 596,
+      "atc": 51
+    }
+  ]
 }
