@@ -2,8 +2,11 @@ name: Atualizar Meta Ads
 
 on:
   schedule:
-    - cron: '0 12 * * *'
-  workflow_dispatch:
+    - cron: '0 12 * * *'   # 09:00 BRT (UTC-3)
+    - cron: '0 16 * * *'   # 13:00 BRT (UTC-3)
+    - cron: '0 20 * * *'   # 17:00 BRT (UTC-3)
+    - cron: '59 2 * * *'   # 23:59 BRT (UTC-3)
+  workflow_dispatch:        # permite rodar manualmente pelo GitHub
 
 jobs:
   update:
