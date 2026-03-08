@@ -157,7 +157,14 @@
     /* ── TABLE ── */
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-    thead th { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #999; padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: right; }
+    thead th {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em; color: #999;
+      padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: right;
+      position: sticky; top: 74px; z-index: 10;
+      background: #141414;
+      box-shadow: 0 1px 0 var(--border);
+    }
     thead th:first-child { text-align: left; }
     tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
     tbody tr:hover { background: rgba(255,255,255,0.03); }
@@ -216,6 +223,9 @@
       .header-subtitle { display: none; }
       .gen-date { display: none; }
       .period-badge { font-size: 0.68rem; padding: 3px 9px; white-space: nowrap; }
+
+      /* ── Cabeçalho tabela sticky mobile ── */
+      thead th { top: 44px; }
 
       /* ── KPI cards compactos ── */
       .kpi-card   { padding: 14px 12px; }
