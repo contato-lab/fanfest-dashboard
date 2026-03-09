@@ -155,13 +155,13 @@
     .funnel-rate { font-size: 0.65rem; color: var(--lime); margin-top: 5px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; }
 
     /* ── TABLE ── */
-    .table-wrap { overflow-x: auto; }
+    .table-wrap { overflow-x: auto; overflow-y: auto; max-height: 72vh; }
     table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     thead th {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.7rem;
       text-transform: uppercase; letter-spacing: 0.08em; color: #999;
       padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: right;
-      position: sticky; top: 74px; z-index: 10;
+      position: sticky; top: 0; z-index: 10;
       background: #141414;
       box-shadow: 0 1px 0 var(--border);
       white-space: nowrap;
