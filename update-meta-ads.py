@@ -66,6 +66,8 @@ for day in all_data:
         'alcance':    int(day.get('reach', 0)),
         'cliques':    int(day.get('clicks', 0)),
         'atc':        get_action_count(day.get('actions'),              'add_to_cart'),
+        'lpViews':    get_action_count(day.get('actions'),              'landing_page_view'),
+        'checkout':   get_action_count(day.get('actions'),              'initiate_checkout'),
     })
 
 output = {
