@@ -1,5 +1,5 @@
 {
-  "updated": "10/03/2026 18:53",
+  "updated": "10/03/2026 19:30",
   "data": [
     {
       "data": "24/02",
@@ -10,7 +10,9 @@
       "impressoes": 22287,
       "alcance": 20367,
       "cliques": 205,
-      "atc": 0
+      "atc": 0,
+      "lpViews": 0,
+      "checkout": 0
     },
     {
       "data": "25/02",
@@ -21,7 +23,9 @@
       "impressoes": 36321,
       "alcance": 19907,
       "cliques": 799,
-      "atc": 0
+      "atc": 0,
+      "lpViews": 282,
+      "checkout": 0
     },
     {
       "data": "26/02",
@@ -32,7 +36,9 @@
       "impressoes": 88227,
       "alcance": 54378,
       "cliques": 1251,
-      "atc": 37
+      "atc": 37,
+      "lpViews": 569,
+      "checkout": 40
     },
     {
       "data": "27/02",
@@ -43,7 +49,9 @@
       "impressoes": 131538,
       "alcance": 75950,
       "cliques": 2316,
-      "atc": 182
+      "atc": 182,
+      "lpViews": 1048,
+      "checkout": 186
     },
     {
       "data": "28/02",
@@ -54,7 +62,9 @@
       "impressoes": 147201,
       "alcance": 87355,
       "cliques": 2092,
-      "atc": 165
+      "atc": 165,
+      "lpViews": 918,
+      "checkout": 156
     },
     {
       "data": "01/03",
@@ -65,7 +75,9 @@
       "impressoes": 178637,
       "alcance": 99801,
       "cliques": 3346,
-      "atc": 311
+      "atc": 311,
+      "lpViews": 1440,
+      "checkout": 300
     },
     {
       "data": "02/03",
@@ -76,7 +88,9 @@
       "impressoes": 160718,
       "alcance": 88950,
       "cliques": 2781,
-      "atc": 348
+      "atc": 348,
+      "lpViews": 1194,
+      "checkout": 345
     },
     {
       "data": "03/03",
@@ -87,7 +101,9 @@
       "impressoes": 166911,
       "alcance": 86428,
       "cliques": 2282,
-      "atc": 232
+      "atc": 232,
+      "lpViews": 1007,
+      "checkout": 253
     },
     {
       "data": "04/03",
@@ -98,7 +114,9 @@
       "impressoes": 138903,
       "alcance": 78860,
       "cliques": 2082,
-      "atc": 333
+      "atc": 333,
+      "lpViews": 667,
+      "checkout": 291
     },
     {
       "data": "05/03",
@@ -109,7 +127,9 @@
       "impressoes": 126677,
       "alcance": 70776,
       "cliques": 2079,
-      "atc": 321
+      "atc": 321,
+      "lpViews": 679,
+      "checkout": 323
     },
     {
       "data": "06/03",
@@ -120,7 +140,9 @@
       "impressoes": 136125,
       "alcance": 78235,
       "cliques": 1787,
-      "atc": 437
+      "atc": 437,
+      "lpViews": 684,
+      "checkout": 447
     },
     {
       "data": "07/03",
@@ -131,7 +153,9 @@
       "impressoes": 148939,
       "alcance": 87492,
       "cliques": 1953,
-      "atc": 364
+      "atc": 364,
+      "lpViews": 789,
+      "checkout": 364
     },
     {
       "data": "08/03",
@@ -142,7 +166,9 @@
       "impressoes": 186016,
       "alcance": 101090,
       "cliques": 2248,
-      "atc": 314
+      "atc": 314,
+      "lpViews": 845,
+      "checkout": 304
     },
     {
       "data": "09/03",
@@ -153,18 +179,22 @@
       "impressoes": 186230,
       "alcance": 91066,
       "cliques": 2203,
-      "atc": 382
+      "atc": 382,
+      "lpViews": 942,
+      "checkout": 387
     },
     {
       "data": "10/03",
-      "compras": 59,
-      "gasto": 615.69,
-      "cpp": 10.44,
-      "valorConv": 12570.0,
-      "impressoes": 88192,
-      "alcance": 50955,
-      "cliques": 1085,
-      "atc": 246
+      "compras": 63,
+      "gasto": 619.47,
+      "cpp": 9.83,
+      "valorConv": 13070.0,
+      "impressoes": 88709,
+      "alcance": 51259,
+      "cliques": 1088,
+      "atc": 258,
+      "lpViews": 456,
+      "checkout": 257
     }
   ]
 }
