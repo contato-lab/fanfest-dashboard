@@ -1,5 +1,5 @@
 {
-  "updated": "05/04/2026 02:51",
+  "updated": "05/04/2026 05:03",
   "data": [
     {
       "data": "24/02",
@@ -511,28 +511,28 @@
     {
       "data": "04/04",
       "compras": 49,
-      "gasto": 997.93,
-      "cpp": 20.37,
+      "gasto": 998.65,
+      "cpp": 20.38,
       "valorConv": 2712.77,
-      "impressoes": 133879,
+      "impressoes": 133981,
       "alcance": 75280,
-      "cliques": 3669,
+      "cliques": 3673,
       "atc": 249,
-      "lpViews": 1915,
+      "lpViews": 1956,
       "checkout": 91
     },
     {
       "data": "05/04",
-      "compras": 0,
-      "gasto": 36.69,
-      "cpp": null,
-      "valorConv": 0.0,
-      "impressoes": 4867,
-      "alcance": 3813,
-      "cliques": 88,
-      "atc": 6,
-      "lpViews": 32,
-      "checkout": 0
+      "compras": 3,
+      "gasto": 70.23,
+      "cpp": 23.41,
+      "valorConv": 493.0,
+      "impressoes": 9274,
+      "alcance": 7736,
+      "cliques": 201,
+      "atc": 14,
+      "lpViews": 114,
+      "checkout": 5
     }
   ]
 }
