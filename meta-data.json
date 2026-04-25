@@ -1,5 +1,5 @@
 {
-  "updated": "25/04/2026 21:57",
+  "updated": "25/04/2026 22:35",
   "data": [
     {
       "data": "24/02",
@@ -774,7 +774,7 @@
       "gasto": 2482.23,
       "cpp": 77.57,
       "valorConv": 6992.51,
-      "impressoes": 278877,
+      "impressoes": 278878,
       "alcance": 141631,
       "cliques": 4715,
       "atc": 237,
@@ -783,16 +783,16 @@
     },
     {
       "data": "25/04",
-      "compras": 24,
-      "gasto": 1556.84,
-      "cpp": 64.87,
-      "valorConv": 6708.16,
-      "impressoes": 160422,
-      "alcance": 83191,
-      "cliques": 3155,
-      "atc": 148,
-      "lpViews": 1139,
-      "checkout": 40
+      "compras": 25,
+      "gasto": 1614.79,
+      "cpp": 64.59,
+      "valorConv": 7100.16,
+      "impressoes": 166612,
+      "alcance": 85243,
+      "cliques": 3276,
+      "atc": 156,
+      "lpViews": 1176,
+      "checkout": 42
     }
   ]
 }
