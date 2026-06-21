@@ -1,5 +1,5 @@
 {
-  "updated": "21/06/2026 02:15",
+  "updated": "21/06/2026 07:10",
   "data": [
     {
       "data": "24/02",
@@ -1499,10 +1499,10 @@
     {
       "data": "19/06",
       "compras": 27,
-      "gasto": 2319.91,
+      "gasto": 2319.94,
       "cpp": 85.92,
       "valorConv": 5410.25,
-      "impressoes": 249910,
+      "impressoes": 249912,
       "alcance": 157717,
       "cliques": 2876,
       "atc": 99,
@@ -1511,29 +1511,29 @@
     },
     {
       "data": "20/06",
-      "compras": 12,
-      "gasto": 2370.12,
-      "cpp": 197.51,
-      "valorConv": 2639.85,
-      "impressoes": 277914,
-      "alcance": 173190,
+      "compras": 13,
+      "gasto": 2371.63,
+      "cpp": 182.43,
+      "valorConv": 2702.35,
+      "impressoes": 278213,
+      "alcance": 173219,
       "cliques": 3327,
-      "atc": 121,
-      "lpViews": 1358,
-      "checkout": 24
+      "atc": 122,
+      "lpViews": 1376,
+      "checkout": 25
     },
     {
       "data": "21/06",
-      "compras": 0,
-      "gasto": 49.99,
-      "cpp": null,
-      "valorConv": 0.0,
-      "impressoes": 7390,
-      "alcance": 2427,
-      "cliques": 99,
-      "atc": 1,
-      "lpViews": 0,
-      "checkout": 0
+      "compras": 2,
+      "gasto": 386.72,
+      "cpp": 193.36,
+      "valorConv": 391.5,
+      "impressoes": 46616,
+      "alcance": 37514,
+      "cliques": 795,
+      "atc": 21,
+      "lpViews": 349,
+      "checkout": 3
     }
   ]
 }
